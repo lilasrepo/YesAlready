@@ -16,9 +16,9 @@
       },
       "ECommons": {
         "type": "Direct",
-        "requested": "[3.2.0.13, )",
-        "resolved": "3.2.0.13",
-        "contentHash": "7S85hhmzMoARE3q+Elf+dQaasVu/k0NNld7uffzmQqKCqdWjGWv+kxD28JL0zU17aK6k57IfSklNqbq3XLYVuw=="
+        "requested": "[3.2.0.19, )",
+        "resolved": "3.2.0.19",
+        "contentHash": "yqRy0/6nuGx47c2Xaem7dyrQmV5Wv8aT5V6mQ1Rd03wPGsAFh+CbxDSFtBTGLxt2ZMW+anj4JoBlxj7KEFIMBg=="
       }
     }
   }
