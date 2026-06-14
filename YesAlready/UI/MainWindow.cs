@@ -5,7 +5,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using ECommons.GameHelpers;
 using ECommons.Reflection;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -329,7 +329,7 @@ internal class MainWindow : Window
                         var createFolder = io.KeyShift;
                         var selectNo = io.KeyAlt;
 
-                        Configuration.CreateNode<TextEntryNode>(C.RootFolder, createFolder, zoneRestricted ? Player.Territory.Value.Name.ToString() : null, !selectNo);
+                        Configuration.CreateNode<TextEntryNode>(C.RootFolder, createFolder, zoneRestricted ? Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.TerritoryType>()!.GetRowOrDefault(Player.Territory)?.PlaceName.Value.Name.ToString() ?? string.Empty : null, !selectNo);
                         C.Save();
                     }
                     else if (root == OkRootFolder || root == NumericsRootFolder)
@@ -421,7 +421,7 @@ internal class MainWindow : Window
             bool nullPtr;
             unsafe
             {
-                nullPtr = payload.Handle == null;
+                nullPtr = payload.NativePtr == null;
             }
 
             var targetNode = node;

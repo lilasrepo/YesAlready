@@ -26,11 +26,12 @@ internal class SelectYesno : TextMatchingFeature
             return new TextEntryNode { IsYes = true };
         }
 
-        if (C.GimmickYesNo && Svc.Data.GetExcelSheet<GimmickYesNo>().Where(x => !x.Message.IsEmpty).Select(x => x.Message).ToList().Any(g => g.EqualsIgnoreSpecial(text)))
-        {
-            Log($"Entry is a gimmick");
-            return new TextEntryNode { IsYes = true };
-        }
+        // TODO(api12): GimmickYesNo.Message is game-7.5 only; B1-stub the gimmick check
+        // if (C.GimmickYesNo && Svc.Data.GetExcelSheet<GimmickYesNo>().Where(x => !x.Message.IsEmpty).Select(x => x.Message).ToList().Any(g => g.EqualsIgnoreSpecial(text)))
+        // {
+        //     Log($"Entry is a gimmick");
+        //     return new TextEntryNode { IsYes = true };
+        // }
 
         if (C.PartyFinderJoinConfirm && GenericHelpers.TryGetAddonByName<AtkUnitBase>("LookingForGroupDetail", out var _) && lfgPatterns.Any(r => r.IsMatch(text)))
         {
@@ -38,50 +39,10 @@ internal class SelectYesno : TextMatchingFeature
             return new TextEntryNode { IsYes = true };
         }
 
-        if (C.AutoCollectable && collectablePatterns.Any(text.Contains))
-        {
-            Log($"Entry is collectable");
-            var name = Enum.GetValues<SeIconChar>().Cast<SeIconChar>().Aggregate(atk->AtkValues[15].String.AsDalamudSeString().GetText(), (current, enumValue) => current.Replace(enumValue.ToIconString(), "")).Trim();
-            if (GenericHelpers.FindRow<Item>(x => x.IsCollectable && !x.Singular.IsEmpty && name.Contains(x.Singular.GetText(), StringComparison.InvariantCultureIgnoreCase)) is { RowId: > 0 } item)
-            {
-                Log($"Detected item [{item}] {item.Name}");
-                if (int.TryParse(Regex.Match(text, @"\d+").Value, out var value))
-                {
-                    if (GenericHelpers.FindSubrow<CollectablesShopItem>(x => x.Item.Value.RowId == item.RowId) is { } collectability)
-                    {
-                        var min = collectability.CollectablesShopRefine.Value.LowCollectability;
-                        Log($"Minimum collectability required is {min}, value detected is {value}");
-                        if (value >= min)
-                        {
-                            Log($"Entry is [{item}] {item.Name} with a sufficient collectability of {value}");
-                            return new TextEntryNode { IsYes = true };
-                        }
-                        else
-                        {
-                            Log($"Entry is [{item}] {item.Name} with an insufficient collectability of {value}");
-                            return new TextEntryNode { IsYes = false };
-                        }
-                    }
-                    else
-                    {
-                        if (item.AetherialReduce > 0) // aethersand fish aren't turned in for scrips so collectability doesn't matter
-                        {
-                            Log($"Entry is [#{item.RowId}] {item.Name} and probably an aethersand fish. Skipping collectability check.");
-                            return new TextEntryNode { IsYes = true };
-                        }
-                        else if (GenericHelpers.TryGetRow<WKSItemInfo>(item.AdditionalData.RowId, out var wksItem)) // stellar fish are scored based on collective collectability so individual doesn't matter
-                        {
-                            Log($"Entry is [#{item.RowId}] {item.Name} for {wksItem.WKSItemSubCategory.ValueNullable?.Name ?? "null"}. Skipping collectability check.");
-                            return new TextEntryNode { IsYes = true };
-                        }
-                        else
-                            Log($"Failed to find matching CollectablesShopItem for [{item.RowId}] {item.Name}. Not an aethersand fish or a CE fish. Ping the dev or create a git issue if you found this message erroneously.");
-                    }
-                }
-            }
-            else
-                Log($"Failed to match any collectable to {name} [original={atk->AtkValues[15].String}]");
-        }
+        // TODO(api12): AutoCollectable disabled — depends on GenericHelpers.FindSubrow (ECommons HEAD-only),
+        // WKSItemInfo Lumina sheet (game-7.5), Item.AdditionalData wrapper (Lumina sub-row drift).
+        // B1 stub: skip auto-collectable handling entirely.
+        // if (C.AutoCollectable && collectablePatterns.Any(text.Contains)) { ... }
 
         var nodes = C.GetAllNodes().OfType<TextEntryNode>();
         foreach (var node in nodes)

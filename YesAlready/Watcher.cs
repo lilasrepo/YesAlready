@@ -73,7 +73,7 @@ public class Watcher : IDisposable
             EscapeTargetName = target != null ? target.Name.GetText() : string.Empty;
         }
 
-        if (Svc.Targets.Target is { BaseId: var id })
+        if (Svc.Targets.Target is { DataId: var id })
         {
             if (id != _lastTargetId)
                 Service.Watcher.LastSelectedListEntry = null;
@@ -83,20 +83,23 @@ public class Watcher : IDisposable
             Service.Watcher.LastSelectedListEntry = null;
     }
 
-    private unsafe bool FireCallbackDetour(AtkUnitBase* thisPtr, uint valueCount, AtkValue* values, bool close)
+    private unsafe void FireCallbackDetour(AtkUnitBase* thisPtr, uint valueCount, AtkValue* values, bool close)
     {
         if (thisPtr->NameString is not ("SelectString" or "SelectIconString"))
-            return _fireCallbackHook.Original(thisPtr, valueCount, values, close);
+        {
+            _fireCallbackHook.Original(thisPtr, valueCount, values, close);
+            return;
+        }
 
         try
         {
             var atkValueList = Enumerable.Range(0, (int)valueCount)
                 .Select<int, object>(i => values[i].Type switch
                 {
-                    AtkValueType.Int => values[i].Int,
-                    AtkValueType.String => Marshal.PtrToStringUTF8(new IntPtr(values[i].String)) ?? string.Empty,
-                    AtkValueType.UInt => values[i].UInt,
-                    AtkValueType.Bool => values[i].Byte != 0,
+                    FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int => values[i].Int,
+                    FFXIVClientStructs.FFXIV.Component.GUI.ValueType.String => Marshal.PtrToStringUTF8(new IntPtr(values[i].String)) ?? string.Empty,
+                    FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt => values[i].UInt,
+                    FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Bool => values[i].Byte != 0,
                     _ => $"Unknown Type: {values[i].Type}"
                 })
                 .ToList();
@@ -106,8 +109,7 @@ public class Watcher : IDisposable
         catch (Exception ex)
         {
             PluginLog.Error($"Exception in {nameof(FireCallbackDetour)}: {ex.Message}");
-            return _fireCallbackHook.Original(thisPtr, valueCount, values, close);
         }
-        return _fireCallbackHook.Original(thisPtr, valueCount, values, close);
+        _fireCallbackHook.Original(thisPtr, valueCount, values, close);
     }
 }

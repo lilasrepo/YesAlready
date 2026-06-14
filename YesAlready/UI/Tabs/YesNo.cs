@@ -1,4 +1,4 @@
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
@@ -35,7 +35,7 @@ public class YesNo
             var createFolder = io.KeyShift;
             var selectNo = io.KeyAlt;
 
-            Configuration.CreateNode<TextEntryNode>(C.RootFolder, createFolder, zoneRestricted ? Player.Territory.Value.Name.ToString() : null, !selectNo);
+            Configuration.CreateNode<TextEntryNode>(C.RootFolder, createFolder, zoneRestricted ? Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.TerritoryType>()!.GetRowOrDefault(Player.Territory)?.PlaceName.Value.Name.ToString() ?? string.Empty : null, !selectNo);
             C.Save();
         }
 

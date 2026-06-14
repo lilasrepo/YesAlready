@@ -134,8 +134,10 @@ public abstract class TextMatchingFeature : AddonFeature
     {
         if (node is IZoneRestrictedNode { ZoneRestricted: true } zoneNode)
         {
-            if (Player.Territory is { ValueNullable.PlaceName.ValueNullable.Name: { IsEmpty: false } name })
+            var ttRow = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.TerritoryType>()!.GetRowOrDefault(Player.Territory);
+            if (ttRow is { } tt && !tt.PlaceName.Value.Name.IsEmpty)
             {
+                var name = tt.PlaceName.Value.Name;
                 if (!EntryMatchesText(zoneNode.ZoneText, name.ToString(), zoneNode.ZoneIsRegex))
                 {
                     Log($"Zone restriction not met: {name} does not match {zoneNode.ZoneText}");

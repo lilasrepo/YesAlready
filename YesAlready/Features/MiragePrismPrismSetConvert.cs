@@ -74,7 +74,7 @@ public class MiragePrismPrismSetConvert : AddonFeature
             {
                 if (SlotsFilled.Contains(slot)) return true;
 
-                var contextMenu = (AtkUnitBase*)Svc.GameGui.GetAddonByName("ContextIconMenu", 1).Address;
+                var contextMenu = (AtkUnitBase*)Svc.GameGui.GetAddonByName("ContextIconMenu", 1);
 
                 if (contextMenu is null || !contextMenu->IsVisible)
                 {

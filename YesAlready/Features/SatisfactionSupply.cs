@@ -88,7 +88,7 @@ internal class SatisfactionSupply : AddonFeature
     {
         if (SlotsFilled.Contains(i)) return true;
 
-        var contextMenu = (AtkUnitBase*)Svc.GameGui.GetAddonByName("ContextIconMenu", 1).Address;
+        var contextMenu = (AtkUnitBase*)Svc.GameGui.GetAddonByName("ContextIconMenu", 1);
 
         if (contextMenu is null || !contextMenu->IsVisible)
         {
@@ -145,8 +145,9 @@ public unsafe class ReaderSatisfactionSupply(AtkUnitBase* UnitBase, int BeginOff
     public AgentSatisfactionSupply.ItemInfo MinBotItem => AgentSatisfactionSupply.Instance()->Items[1];
     public AgentSatisfactionSupply.ItemInfo FshItem => AgentSatisfactionSupply.Instance()->Items[2];
 
-    public Span<uint> CraftScripIds => AgentSatisfactionSupply.Instance()->CrafterScripIds;
-    public Span<uint> GatherScripIds => AgentSatisfactionSupply.Instance()->GathererScripIds;
+    // TODO(api12): AgentSatisfactionSupply.{CrafterScripIds,GathererScripIds} are game-7.5 fields not present in API12 ClientStructs. B1 stub: return empty Span.
+    public Span<uint> CraftScripIds => Span<uint>.Empty;
+    public Span<uint> GatherScripIds => Span<uint>.Empty;
 
     public bool WillItemOvercap(AgentSatisfactionSupply.ItemInfo item, Action<string> log)
     {

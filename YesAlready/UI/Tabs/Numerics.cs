@@ -1,4 +1,4 @@
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ECommons.GameHelpers;
@@ -31,7 +31,7 @@ public static class Numerics
             var createFolder = io.KeyShift;
             var zoneRestricted = io.KeyCtrl;
 
-            Configuration.CreateNode<NumericsEntryNode>(NumericsRootFolder, createFolder, zoneRestricted ? Player.Territory.Value.Name.ToString() : null);
+            Configuration.CreateNode<NumericsEntryNode>(NumericsRootFolder, createFolder, zoneRestricted ? Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.TerritoryType>()!.GetRowOrDefault(Player.Territory)?.PlaceName.Value.Name.ToString() ?? string.Empty : null);
             C.Save();
         }
 

@@ -36,7 +36,7 @@ internal unsafe class AtkValueArray : IDisposable
     {
         for (var i = 0; i < Length; i++)
         {
-            if (Pointer[i].Type == AtkValueType.String)
+            if (Pointer[i].Type == FFXIVClientStructs.FFXIV.Component.GUI.ValueType.String)
                 Marshal.FreeHGlobal(new IntPtr(Pointer[i].String));
         }
 
@@ -48,19 +48,19 @@ internal unsafe class AtkValueArray : IDisposable
         switch (value)
         {
             case uint uintValue:
-                Pointer[index].Type = AtkValueType.UInt;
+                Pointer[index].Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt;
                 Pointer[index].UInt = uintValue;
                 break;
             case int intValue:
-                Pointer[index].Type = AtkValueType.Int;
+                Pointer[index].Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int;
                 Pointer[index].Int = intValue;
                 break;
             case float floatValue:
-                Pointer[index].Type = AtkValueType.Float;
+                Pointer[index].Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Float;
                 Pointer[index].Float = floatValue;
                 break;
             case bool boolValue:
-                Pointer[index].Type = AtkValueType.Bool;
+                Pointer[index].Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Bool;
                 Pointer[index].Byte = Convert.ToByte(boolValue);
                 break;
             case string stringValue:
@@ -68,7 +68,7 @@ internal unsafe class AtkValueArray : IDisposable
                 var stringAlloc = Marshal.AllocHGlobal(stringBytes.Length + 1);
                 Marshal.Copy(stringBytes, 0, stringAlloc, stringBytes.Length + 1);
 
-                Pointer[index].Type = AtkValueType.String;
+                Pointer[index].Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.String;
                 Pointer[index].String = (byte*)stringAlloc;
                 break;
             default:

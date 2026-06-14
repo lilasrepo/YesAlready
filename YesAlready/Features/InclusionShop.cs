@@ -38,7 +38,7 @@ internal class InclusionShop : AddonFeature
             return Original();
 
         var atkValue0 = values[0];
-        if (atkValue0.Type != AtkValueType.Int)
+        if (atkValue0.Type != FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int)
             return Original();
 
         var val0 = atkValue0.Int;
