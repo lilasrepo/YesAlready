@@ -10,7 +10,7 @@
 
 	<PropertyGroup>
 		<Authors>daemitus, croizat</Authors>
-		<Version>1.15.2.2</Version>
+		<Version>1.15.2.3</Version>
 		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
   <PropertyGroup>

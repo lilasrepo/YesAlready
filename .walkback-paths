@@ -1,0 +1,12 @@
+# Path-level walk-back pins for YesAlready — see plugin_update SKILL.md.
+# Pinned 2026-06-24 (Layer 3 / frozen-version guard): YesAlready.csproj carries the TC-managed
+# <Version>1.15.2.2</Version>. Upstream's <Version> is a perpetual 0.0.0.0 placeholder (real version
+# lives only in the upstream git tag via DynamisPublishAction CI), so csproj take-theirs would REVERT the
+# TC version toward 0.0.0.0 on any refresh whose range touches the csproj — silently corrupting the
+# published AssemblyVersion. Pin the whole csproj take-ours so the TC version sticks across refreshes; the
+# Layer-2 auto-bump increments it (1.15.2.2 -> 1.15.2.3) whenever a refresh changes shipped content but the
+# version would otherwise stay equal to the published tag. Trade-off: upstream csproj *structural* changes
+# (new PackageReference/target) no longer auto-flow — they surface as a loud build failure on the next
+# refresh (fail-loud > the prior silent reset), and the operator merges them by hand. Replaces the
+# recurring manual re-apply of commit ad5ecef5. See memory project_lilasrepo_version_pins.
+YesAlready/YesAlready.csproj
